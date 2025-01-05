@@ -41,6 +41,7 @@ const getNotificationIcon = (type: string) => {
           const unreadIds = data.filter((n) => !n.read).map((n) => n.id);
           if (unreadIds.length > 0) await markNotificationsAsRead(unreadIds);
         } catch (error) {
+          console.error("an error occurred" , error)
           toast.error("Failed to fetch notifications");
         } finally {
           setIsLoading(false);

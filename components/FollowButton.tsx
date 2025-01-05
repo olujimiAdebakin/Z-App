@@ -8,38 +8,35 @@ import toast from "react-hot-toast";
 import { toggleFollow } from "@/actions/user.actions";
 
 
-export default function FollowButton() {
+export default function FollowButton({ userId }: { userId: string }) {
+  const [isLoading, setIsLoading] = useState(false);
 
-     const [isLoading, setIsLoading] = useState(false);
 
-     const handleFollow = async () => {
-       setIsLoading(true);
+  const handleFollow = async () => {
+    setIsLoading(true);
 
-       try {
-         await toggleFollow(userId);
-         toast.success("User followed successfully");
-       } catch (error) {
-         toast.error("Error following user");
-       } finally {
-         setIsLoading(false);
-       }
-     };
+    try {
+      await toggleFollow(userId);
+      toast.success("User followed successfully");
+    } catch (error) {
+      console.error("Error following user", error);
+      toast.error("Error following user");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-    return (
-      <>
-        <Button
-          size={"sm"}
-          variant={"secondary"}
-          onClick={handleFollow}
-          disabled={isLoading}
-          className="w-20"
-        >
-          {isLoading ? (
-            <Loader2Icon className="size-4 animate-spin" />
-          ) : (
-            "Follow"
-          )}
-        </Button>
-      </>
-    );
+  return (
+    <>
+      <Button
+        size={"sm"}
+        variant={"secondary"}
+        onClick={handleFollow}
+        disabled={isLoading}
+        className="w-20"
+      >
+        {isLoading ? <Loader2Icon className="size-4 animate-spin" /> : "Follow"}
+      </Button>
+    </>
+  );
 }

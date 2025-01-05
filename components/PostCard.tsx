@@ -2,7 +2,7 @@
 
 // import { getPosts } from "@/actions/post.actions";
 import { SignInButton, useUser } from "@clerk/nextjs";
-import { Post } from "@prisma/client";
+// import { Post } from "@prisma/client";
 import { useState } from "react";
 import {
   createComment,
@@ -39,18 +39,21 @@ export default function PostCard({ post, dbUserId }: { post: Post; dbUserId: str
 
  const handleLike = async () => {
    if (isLiking) return;
+
    try {
      setIsLiking(true);
      setHasLiked((prev) => !prev);
      setOptimisticLikes((prev) => prev + (hasLiked ? -1 : 1));
      await toggleLike(post.id);
    } catch (error) {
-     setOptimisticLikes(post._count.likes);
-     setHasLiked(post.likes.some((like) => like.userId === dbUserId));
+     console.error("an error occurred", error); 
+     setOptimisticLikes(post._count.likes); // Reset the optimistic likes
+     setHasLiked(post.likes.some((like) => like.userId === dbUserId)); // Recheck if the user has liked
    } finally {
-     setIsLiking(false);
+     setIsLiking(false); // Reset the loading state
    }
  };
+
 
      const handleAddComment = async () => {
        if (!newComment.trim() || isCommenting) return;
@@ -62,6 +65,7 @@ export default function PostCard({ post, dbUserId }: { post: Post; dbUserId: str
            setNewComment("");
          }
        } catch (error) {
+         console.error("an error occurred", error);
          toast.error("Failed to add comment");
        } finally {
          setIsCommenting(false);
@@ -76,6 +80,7 @@ export default function PostCard({ post, dbUserId }: { post: Post; dbUserId: str
         if (result.success) toast.success("Post deleted successfully");
         else throw new Error(result.error);
       } catch (error) {
+        console.error("an error occurred", error);
         toast.error("Failed to delete post");
       } finally {
         setIsDeleting(false);
