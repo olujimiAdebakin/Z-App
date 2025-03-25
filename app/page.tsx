@@ -6,13 +6,14 @@ import WhoToFollow from "@/components/WhoToFollow"
 import PostCard from "@/components/PostCard";
 import { getPosts } from "@/actions/post.actions";
 import { getDbUserId } from "@/actions/user.actions";
+// import { redirect } from "next/navigation";
 
 
 export default async function Home() {
-  const user = await currentUser();
-  const posts = await getPosts();
-  const dbUserId = await getDbUserId();
-
+ const user = await currentUser();
+//  if (!user) redirect("/sign-in"); // Redirect instead of crashing
+ const posts = await getPosts();
+ const dbUserId = await getDbUserId();
   return (
     <div className="grid grid-cols-1 lg:grid-cols-10 gap-6">
       <div className="lg:col-span-6">
